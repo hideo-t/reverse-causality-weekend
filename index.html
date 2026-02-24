@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>もし外出が出来なかったら週末はなかった</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a2e;
+      --text-primary: #e0ddd5;
+      --text-secondary: #8a8a9a;
+      --accent: #4a9eff;
+      --accent-dim: #2a5a9a;
+      --gold: #c4a35a;
+      --chapter-border: #2a2a3e;
+      --serif: 'Noto Serif JP', 'Hiragino Mincho ProN', serif;
+      --sans: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.95;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ─── */
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 100px 20px 80px;
+      background: linear-gradient(180deg, #1a2a4a 0%, #0f1a2f 100%);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(120,180,255,0.15) 0%, transparent 70%);
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #ffffff;
+      text-shadow: 0 2px 20px rgba(100,160,255,0.3);
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .hero-sub {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: #b0c4de;
+      letter-spacing: 0.15em;
+    }
+    .hero-line {
+      width: 60px; height: 1px;
+      background: var(--gold);
+      margin: 28px auto 0;
+    }
+
+    /* ─── Digest Carousel ─── */
+    .carousel-wrap {
+      background: linear-gradient(180deg, #0f1a2f 0%, #0a0e18 100%);
+      padding: 24px 0 20px;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 calc((100vw - min(85vw, 600px)) / 2);
+      scrollbar-width: none;
+    }
+    .carousel-track::-webkit-scrollbar { display: none; }
+    .carousel-slide {
+      flex: 0 0 min(85vw, 280px);
+      scroll-snap-align: center;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+      aspect-ratio: 3/2;
+    }
+    .carousel-slide:active { transform: scale(0.97); }
+    .carousel-slide img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .carousel-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      padding: 28px 12px 10px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-family: var(--serif);
+      line-height: 1.4;
+    }
+    .carousel-ch {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: var(--gold);
+      margin-right: 6px;
+      font-family: var(--sans);
+      letter-spacing: 0.06em;
+    }
+    .carousel-dots {
+      text-align: center;
+      padding-top: 12px;
+    }
+    .carousel-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      margin: 0 4px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .carousel-dot.active {
+      background: var(--gold);
+      transform: scale(1.3);
+    }
+    @media (min-width: 600px) {
+      .carousel-slide { flex: 0 0 280px; }
+      .carousel-track { padding: 0 calc((100vw - 900px) / 2); gap: 18px; }
+    }
+
+    /* ─── Navigation ─── */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--chapter-border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      overflow-x: auto;
+      font-family: var(--sans);
+      font-size: 0.8rem;
+    }
+    .nav-bar .nav-title {
+      color: var(--gold);
+      font-weight: 700;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+    .nav-bar a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .nav-bar a:hover {
+      color: var(--accent);
+      background: rgba(74,158,255,0.1);
+    }
+
+    /* ─── TOC ─── */
+    .toc {
+      max-width: 700px;
+      margin: 60px auto 40px;
+      padding: 0 20px;
+    }
+    .toc h3 {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .toc-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 18px;
+      color: var(--text-primary);
+      text-decoration: none;
+      border-left: 2px solid var(--chapter-border);
+      transition: all 0.25s;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+    }
+    .toc-item:hover {
+      border-color: var(--accent);
+      background: rgba(74,158,255,0.04);
+      padding-left: 24px;
+    }
+    .toc-num {
+      font-size: 0.75rem;
+      color: var(--accent-dim);
+      font-weight: 700;
+      min-width: 20px;
+    }
+
+    /* ─── Characters ─── */
+    .characters {
+      max-width: 700px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+    .characters h3 {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .char-card {
+      background: var(--bg-card);
+      border: 1px solid var(--chapter-border);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .char-name {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .char-meta {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .char-meta span {
+      background: rgba(74,158,255,0.1);
+      padding: 1px 8px;
+      border-radius: 4px;
+    }
+    .char-appearance {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 6px;
+      border-left: 2px solid var(--chapter-border);
+      padding-left: 10px;
+    }
+    .char-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ─── Divider ─── */
+    .section-divider {
+      width: 40px; height: 1px;
+      background: var(--chapter-border);
+      margin: 0 auto;
+    }
+
+    /* ─── Chapter ─── */
+    .chapter {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 80px 20px;
+      border-top: 1px solid var(--chapter-border);
+    }
+    .chapter-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .chapter-number {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: var(--accent-dim);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .chapter-title {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .chapter-image {
+      margin: 0 -20px 40px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--chapter-border);
+    }
+    .chapter-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.92;
+    }
+    .chapter-body p {
+      margin-bottom: 1.2em;
+      text-indent: 1em;
+      text-align: justify;
+    }
+    .chapter-body p:empty {
+      display: none;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      text-align: center;
+      padding: 60px 20px;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--chapter-border);
+    }
+
+    /* ─── Reading mode toggle ─── */
+    .mode-toggle {
+      position: fixed; bottom: 20px; right: 20px; z-index: 200;
+      background: var(--bg-card);
+      border: 1px solid var(--chapter-border);
+      color: var(--text-secondary);
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+
+    /* --- TTS Read Aloud --- */
+    .tts-fab {
+      position: fixed; bottom: 80px; right: 20px; z-index: 200;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 22px; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      transition: all 0.3s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tts-fab:hover { transform: scale(1.1); }
+    .tts-fab.speaking { background: #e74c3c; animation: tts-pulse 1.5s infinite; }
+    @keyframes tts-pulse {
+      0%,100% { box-shadow: 0 4px 16px rgba(231,76,60,0.4); }
+      50% { box-shadow: 0 4px 24px rgba(231,76,60,0.7); }
+    }
+    .tts-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(20,20,30,0.95); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--chapter-border);
+      padding: 10px 16px; display: none;
+      align-items: center; gap: 10px;
+      font-family: var(--sans); font-size: 0.85rem;
+    }
+    .tts-bar.active { display: flex; flex-wrap: wrap; }
+    .tts-bar button {
+      background: none; border: 1px solid var(--text-secondary);
+      color: var(--text-primary); border-radius: 6px;
+      padding: 6px 12px; cursor: pointer; font-size: 0.8rem;
+      white-space: nowrap; transition: all 0.2s;
+    }
+    .tts-bar button:hover { border-color: var(--accent); color: var(--accent); }
+    .tts-bar .tts-info {
+      flex: 1; color: var(--text-secondary);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      min-width: 80px;
+    }
+    .tts-bar .tts-speed {
+      display: flex; align-items: center; gap: 4px;
+      color: var(--text-secondary); font-size: 0.75rem;
+    }
+    .tts-bar .tts-speed input { width: 60px; accent-color: var(--accent); }
+    body.light .tts-bar {
+      background: rgba(245,245,240,0.95); border-top-color: #ddd;
+    }
+    body.light .tts-bar button { border-color: #999; color: #333; }
+    body.light .tts-bar .tts-info { color: #666; }
+
+    /* ─── Light mode ─── */
+    body.light {
+      --bg-primary: #f5f0e8;
+      --bg-secondary: #ebe5d9;
+      --bg-card: #fff;
+      --text-primary: #2a2a2a;
+      --text-secondary: #6a6a6a;
+      --chapter-border: #d5cfc3;
+      --accent: #2563eb;
+      --accent-dim: #6b9eff;
+      --gold: #8a6d2b;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 600px) {
+      body { font-size: 15px; }
+      .chapter { padding: 50px 16px; }
+    }
+
+    /* ─── Scroll progress ─── */
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; z-index: 200;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      width: 0%;
+      transition: width 0.1s;
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" id="progress"></div>
+
+  <header class="hero">
+    <h1 class="hero-title">もし外出が出来なかったら週末はなかった</h1>
+    <p class="hero-sub">GENERATED WITH LOCAL AI — OLLAMA + STABLE DIFFUSION</p>
+    <div class="hero-line"></div>
+  </header>
+
+  <nav class="nav-bar">
+    <span class="nav-title">目次</span>
+    <a href="#chapter-1">第1章</a><a href="#chapter-2">第2章</a><a href="#chapter-3">第3章</a><a href="#chapter-4">第4章</a><a href="#chapter-5">第5章</a><a href="#chapter-6">第6章</a><a href="#chapter-7">第7章</a><a href="#chapter-8">第8章</a>
+  </nav>
+
+  <div class="toc">
+    <h3>— 目次 —</h3>
+        <a href="#chapter-1" class="toc-item"><span class="toc-num">1</span><span class="toc-label">家の中だけの週末</span></a>
+        <a href="#chapter-2" class="toc-item"><span class="toc-num">2</span><span class="toc-label">思い出の欠落</span></a>
+        <a href="#chapter-3" class="toc-item"><span class="toc-num">3</span><span class="toc-label">公園の欠片</span></a>
+        <a href="#chapter-4" class="toc-item"><span class="toc-num">4</span><span class="toc-label">友人の変容</span></a>
+        <a href="#chapter-5" class="toc-item"><span class="toc-num">5</span><span class="toc-label">制限による変化</span></a>
+        <a href="#chapter-6" class="toc-item"><span class="toc-num">6</span><span class="toc-label">思い出の欠片</span></a>
+        <a href="#chapter-7" class="toc-item"><span class="toc-num">7</span><span class="toc-label">制限と自由</span></a>
+        <a href="#chapter-8" class="toc-item"><span class="toc-num">8</span><span class="toc-label">外出禁止の真実</span></a>
+  </div>
+
+  <div class="characters">
+    <h3>— 登場人物 —</h3>
+    <div class="char-grid">
+      <div class="char-card">
+        <div class="char-name">朝子</div>
+        <div class="char-meta"><span>主人公</span><span>25歳</span></div>
+        <div class="char-appearance">茶色い長髪に黒い眼鏡をかけ、落ち着いた雰囲気を持つ女性。</div>
+        <div class="char-desc">好奇心旺盛で洞察力がある。制限された社会に違和感を感じている。</div>
+      </div>
+      <div class="char-card">
+        <div class="char-name">翔太郎</div>
+        <div class="char-meta"><span>サブキャラ</span><span>30歳</span></div>
+        <div class="char-appearance">短い茶色の髪とフレームレス眼鏡をかけた、少し内気な男性。</div>
+        <div class="char-desc">理論的思考が得意で、現状に疑問を持つ。朝子との会話を通じて感情的な面も見せる。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <main>
+
+    <section class="chapter" id="chapter-1">
+      <div class="chapter-header">
+        <span class="chapter-number">第1章</span>
+        <h2 class="chapter-title">家の中だけの週末</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第1章　家の中だけの週末</p>
+
+        <p>窓際からさした光が、薄暗い部屋に静かな影を作り出す。外では雨粒がじわりと降っているようだ。湿度が高い空気は、朝子の肌を重く包み込む。</p>
+        <p>彼女はソファで身を起こし、白木のテーブル脇にあるコーヒーマグを取り上げた。中に入るのはまだ冷たい液体だけ。手に触れる陶器の質感が微かに温かい。</p>
+
+        <p>テレビ電話アプリを開き、友人らと繋がらせる。</p>
+        <p>「おはよう、翔太郎」</p>
+        <p>画面には曖昧な笑顔を浮かべる男の姿があった。「こんにちは」と返す声もどこか遠くへ聞こえている。彼女の部屋では雨音が響き、外側の世界と対話する。</p>
+
+        <p>「この週末は何か楽しい計画がある？」</p>
+        <p>朝子は問い掛けた。</p>
+        <p>翔太郎は何秒間か沈黙した後、「いや、特にない」答える。「私達には家から出られないんだよな」と続けた。静寂が二人を包む。</p>
+
+        <p>雨粒が外の窓ガラスに打ちつける音だけが聞こえてくる。</p>
+        <p>「映画でも観ようか？」</p>
+        <p>彼女は提案した。それはいつもの週末と同じような問いだった。「そうだね、良いアイデアだ」翔太郎は頷いた。</p>
+
+        <p>二人で選んだのは老舗のアニメーション作品。</p>
+        <p>画面にキャラクターが登場すると、翔太郎は「これが懐かしい」と呟く。彼女も同じ思いを抱いていることが伝わる。「でも、映画館じゃなくこの状況だからね」朝子は笑みを見せた。</p>
+
+        <p>ソファの上で身じろぎをしてから、「あなたがもし外出できたら何したい？」と問いかける。</p>
+        <p>「旅行かな」と翔太郎は答えた。その瞳に遠くを見るような光があった。「どの国でも良いんだよ、制限がないなら」</p>
+        <p>朝子も同様な思いを胸に秘めている。</p>
+
+        <p>映画の音が静かになった瞬間だけ雨粒と窓ガラスとのぶつかり合う微かな反響が聞こえる。室内には湿度が高い。</p>
+        <p>「じゃあ、次の週末また電話しようね」</p>
+        <p>翔太郎は手元で画面を閉じた。「そうだな」と朝子も応えた。</p>
+
+        <p>部屋にふと静寂が戻った。外では雨粒の音だけが続く。コーヒーマグを取り上げて唇へ運び、初めてその液体を啜る。</p>
+        <p>彼女が視線を窓際に向けたとき、光は微かに変化していた。まるで世界が徐々に動き出そうとしているようだった。</p>
+
+        <p>曖昧な雨音と静寂の中で、朝子はまた明日への繋がりを探し始めるのだと感じただけだった。</p>
+        <p>（家の中だけの週末も、少し変わった形での旅が始まったような気がした）</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-2">
+      <div class="chapter-header">
+        <span class="chapter-number">第2章</span>
+        <h2 class="chapter-title">思い出の欠落</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第2章　思い出の欠落</p>
+
+        <p>薄曇りが部屋に垂れ込める。朝子は窓際で、古いアルバムを開いている。手触りの滑らかなページには、赤い革靴と黄色い帽子の写真がぎゅう詰めになっている。</p>
+
+        <p>「これ、あの公園で撮ったやつだね」</p>
+
+        <p>声に出さずに自分自身に囁きかける。</p>
+        <p>春先から初夏にかけては陽射しが暖かく、緑濃くなる。人々が笑顔を広げていた頃の記憶。</p>
+
+        <p>ページをめくる音が静寂の中へと消えていく。</p>
+        <p>次の一瞬で写真が手元にある。友人たちと共に立ち並んだり曲ったりしながら撮られた数枚のうち一枚だ。</p>
+        <p>しかし、そこには誰もいない。</p>
+        <p>笑顔は欠けていた。</p>
+        <p>空気が凍ったように冷たくなっている。</p>
+
+        <p>「これは？」</p>
+
+        <p>朝子は小さく呟き、ページをめくる手が止まる。友人たちとの旅行写真だが、そこにいるのは自分だけだった。</p>
+        <p>どこか遠い景色の向こうに誰もいない道や風景しか映っていない。</p>
+
+        <p>それから朝子は何枚もの思い出の欠片を取り出して眺める。</p>
+        <p>学校での授業中、会議室で打ち合わせをしていた時。一人一人が笑顔を見せていたはずなのに、いつの間にかその存在は消え去っている。</p>
+        <p>不思議な現象に胸騒ぎを感じる。</p>
+
+        <p>「どうしてこんなことになるのかな…」</p>
+
+        <p>小さなため息と一緒に過去を取り囲む風景が曖昧になり始める。思い出の中から姿を消した人々のように、この世界も徐々にその輪郭を見失い始めている。</p>
+        <p>それでも朝子はアルバムのページを開き続ける。</p>
+
+        <p>「でもね、今ならわかるよ」</p>
+
+        <p>最後の一頁まで辿り着くと薄ら笑みを浮かべる。</p>
+        <p>まだ思い出が完全には消えていないことに気づいていたからだ。過去も未来も自分たちの中に生き続けていることを見出す。</p>
+
+        <p>朝子はゆっくりとページを閉じた。アルバムの表紙にある、自分が一番好きだった写真に目を落とす。</p>
+        <p>曇り空にも関わらず、どこか懐かしい風景が広がっていた。</p>
+        <p>手探りで思い出を探し求める日々の中で、それでも希望を見出す力があったことを忘れずにいたからだ。</p>
+
+        <p>アルバムは布団の上へ置かれ、朝子自身もまた静寂の中に包まれていく。窓からの光が変わり始めていて、明日への新たな期待感が薄らと広がっているように思えた。</p>
+        <p>思い出が欠けてしまう世界でも、まだ何かがあることを信じ続けていた。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-3">
+      <div class="chapter-header">
+        <span class="chapter-number">第3章</span>
+        <h2 class="chapter-title">公園の欠片</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第3章　公園の欠片</p>
+
+        <p>雨が上がった日曜日の午後、朝子は自宅の窓から外を見渡した。遠くで乾いた風が吹き抜けてくる音と土埃の匂いが混ざり合って漂ってくる。曇っていた空が次第に青みを帯びてゆく。</p>
+
+        <p>家を出る気力はなく、朝子は少し遅れて近くの中学校跡地にある公園へ向かった。もう一年以上も使われていないらしいその場所には、今や荒れ果てた草木と古い遊具が横たわっているだけだった。</p>
+
+        <p>スイングの鎖に手を伸ばし、冷たく濡れた金属の感触を感じる。砂場は土埃で埋まりかけていた。しかし、公園の中で最も異様なのは、そこらじゅうにあるその空っぽになった鉄骨製遊具だ。</p>
+        <p>「あれ？」</p>
+
+        <p>友人たちと来た記憶が薄れている中でも、朝子にはこの光景に違和感を感じていた。</p>
+
+        <p>翌日、翔太郎は仕事帰りの路上で偶然朝子を見かけた。通りすがりだった彼女を呼び止め、「公園の遊具について話したいことがあるんだ」と告げると、近くにあるベンチへ二人きりで向かった。</p>
+        <p>「最近気づいたんだけど、この街中の公園に置かれた遊具って何故だか全部外れちゃってる感じがする。」</p>
+        <p>翔太郎は眉間にしわを寄せたまま話す。「僕も昨日行った公園の砂場にも思わず手が伸びて、結局何もなかったんだよなあ」</p>
+
+        <p>雨上がりでまだ湿った石畳の道から二人分の影が揺れ動く。ベンチに座り込んだ翔太郎は、背後からの風を浴びながら首をかしげる。</p>
+        <p>「朝子さんも同じように感じたのか？僕だけじゃないんだね」</p>
+
+        <p>朝子は何度も頷いた。「そうだよ、それ以上にもっと大きな違和感がある。外に出られない毎日でも、公園は特別な場所だったよね」</p>
+        <p>二人の視線が重なると、それぞれに思い出すべき過去のエピソードを追い求めた。</p>
+        <p>「だからあそこにある遊具ってのは、まるで思い出の欠片みたいじゃない？」</p>
+
+        <p>ベンチから立ち上がりながら翔太郎は言った。「僕たちが見つけ出せないものは、忘れ去られる運命かもしれない。でもまだ誰かの記憶の中に残っている限り、それ自体は消えないんだよ」</p>
+        <p>朝子もまた歩みを進め、「そうだよね」と呟いた。</p>
+
+        <p>二人とも周囲の景色を見渡し静寂に耳を傾ける。</p>
+        <p>「翔太郎さんって、昔からずっと公園で遊んでたそうじゃない？」</p>
+
+        <p>風が枯れ草と砂埃を運びつつ通り過ぎていく。翔太郎は少し微笑んだ。「そうだねえ。子供時代以来、何十年も経った今でも、時々あの場所に行きたいと思うくらいさ」</p>
+        <p>「だからこそ余計に不思議な気分になるのよ」</p>
+
+        <p>彼女の視線が遠くへと向かう。</p>
+        <p>「思い出は欠けてしまっても、その痕跡だけはどこにも残っているんだわ。僕たちはそれが何なのかを探し続けてるわけだね」</p>
+        <p>翔太郎は何度もうなずき返した。</p>
+
+        <p>二人の言葉を介して、公園という場所が特別である理由について語り合った後で、朝子と翔太郎は再び別れた。</p>
+        <p>「これからも時々会う機会があったらまた話そうね」</p>
+
+        <p>二人の影が溶け込みゆく道端へ向かって歩き出す。</p>
+
+        <p>空には薄明るい雲がかかり始めている。遠ざかる足音と一緒に、公園の遊具たちが風に揺れる様子を思い描いた。</p>
+        <p>「もしも外出ができなかったら週末は無駄な時間になると思っていたけど、その逆かもしれない」</p>
+
+        <p>冷たい雨粒から乾燥した土埃へと変化する中で朝子は立ち去る。公園の欠片たちが風に揺れて音を立てる。</p>
+
+        <p>遠くから聞こえるエンジン音。</p>
+        <p>時計の針と同じリズムで、彼らの話題も次第にはかどっていった。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-4">
+      <div class="chapter-header">
+        <span class="chapter-number">第4章</span>
+        <h2 class="chapter-title">友人の変容</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第4章　友人の変容</p>
+
+        <p>薄暮が街に静かな影を作り出す。ビルの窓枠からは灯りが洩れ、路地の石畳には日没後の冷たさを感じる。リビングルームでは壁際に設けられた大型モニターから微弱な電子音が聞こえてくる。</p>
+
+        <p>朝子はテレビ電話を待機画面に設定したまま手元を見つめている。</p>
+        <p>「もうすぐだね」と携帯のメッセージアプリで翔太郎へ送信する。回答がない。彼もまた同じ場所で考え事を続けているだろうか。モニターが震える。</p>
+
+        <p>表示と共に友人の輪郭が現れる。画面を切り替え、全員分の顔が並んだ。</p>
+        <p>「やあ」と明るく挨拶するものたちへ朝子は微笑み返す。「こんにちは」</p>
+
+        <p>「最近どう？」と誰かから質問が出た。</p>
+
+        <p>「そうねえ」</p>
+        <p>短い沈黙と共に答えを探す。手元に視線を落としてペンで紙面を指し、考え事を続ける。</p>
+        <p>「新しいレポートの準備中だわ」と朝子は続けた。「いつも通り」</p>
+
+        <p>背景には各自の部屋が見え隠れする。壁一面窓ガラス張りになった家では夜景と溶け合うように照明が消えている。アパートに暮らす者たちの生活感溢れる空間も見える。</p>
+
+        <p>「週末は何してた？」</p>
+        <p>誰かから聞こえる声。だが、答えはすぐに返らず。</p>
+        <p>朝子は画面を眺めながら室内を見回した。「最近ね」と彼女は続ける。「公園に行ってきたんだ」</p>
+
+        <p>その瞬間友人達の顔に驚きが浮かぶ。</p>
+
+        <p>「あんな所？」と誰かから聞こえる声。「どうして？」</p>
+
+        <p>「ただ、懐かしいって思っただけで」朝子は言った。</p>
+        <p>しかし画面には沈黙だけが広がる。彼らにとって公園とは馴染みのない空間であり、そこに赴く理由など理解しがたいものだろう。</p>
+
+        <p>「翔太郎も一緒だったんだよ」と彼女の声に僅かな笑顔。「一緒に思い出を語り合った」</p>
+
+        <p>誰かから聞こえるため息。</p>
+        <p>テレビ電話を通じて話すだけでは本当の絆は育まれない。彼らと過ごす時間を朝子は大切だと感じるが、それが本当に足るのかと疑問も生まれてくる。</p>
+
+        <p>「最近どうしてる？」</p>
+        <p>また別の声が現れ、質問が出た。「何か楽しいことあった？」</p>
+
+        <p>しかし彼女には答えようがない。</p>
+        <p>日々のルーチンの中で新たな喜びを見つけることは難しい。外出制限は心に壁を築き上げるからだ。</p>
+        <p>朝子は視線をモニターに戻し、「そうねえ」と言いながら、手元でペンを持つ指先が微かに震える。</p>
+
+        <p>「最近会った？」と誰かから聞こえる声。「あいつら」</p>
+
+        <p>「うーん」</p>
+        <p>一度静寂。彼女はもう一度考える。</p>
+        <p>「翔太郎とは時々話すけどね」「他のはちょっと距離ができちゃってるみたい」朝子は言った。</p>
+
+        <p>友人の一人が笑いを漏らした。「そりゃそうだよ」と誰かから声。「会う機会がないんだもん」</p>
+
+        <p>画面の向こうで表情が揺れる。</p>
+        <p>それぞれ、互いに理解しきれない様子。テレビ電話を通じた言葉のやり取りは心地よい空気を作ることを避ける。</p>
+
+        <p>「寂しいね」</p>
+        <p>誰かから聞こえる声。「でも仕方ないよ」</p>
+
+        <p>朝子は何も返さず。</p>
+        <p>ただ画面を見つめ、手元に視線を落として黙り込む。彼女たちの言葉は心地よい空気を作るが、本当の絆を育むには足らないことを彼ら自身も認識している。</p>
+
+        <p>「今度みんなで集まる？」</p>
+        <p>誰かから聞こえる声。「久々だしね」</p>
+
+        <p>朝子は何と答えたのか思い出せない。</p>
+        <p>ただ彼女たちは画面に向かい微笑んだ。テレビ電話を通じて話すだけでは本当の絆は育まれないと彼らも気づいているが、それでも何かを求めるように繋げ続けている。</p>
+
+        <p>「またね」と誰かから聞こえる声。「週末にでも」</p>
+
+        <p>その言葉と共にモニター上の顔々が消えていく。</p>
+        <p>テレビ電話が切れた後、室内には静寂だけが広がる。薄暮は夜へと変わる空を映し出す窓ガラス越しの風景。</p>
+
+        <p>朝子は何も話せないでいる自分たちを見つめながら、手元に視線を落とした。</p>
+        <p>テレビ電話を通じて育む絆は本当のものではないかもしれないが、それでも人々は繋げ続けている。それは希望であり、孤独と向き合うための慰めでもある。</p>
+
+        <p>彼女は何も言わずにモニターを見つめたまま、室内から聞こえる音に耳を傾けた。</p>
+        <p>遠くで鳴り響く雨粒がネオンを叩くような電子音と共に、夜の街は静かに息づいている。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-5">
+      <div class="chapter-header">
+        <span class="chapter-number">第5章</span>
+        <h2 class="chapter-title">制限による変化</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第5章　制限による変化</p>
+
+        <p>朝日が昇る前に、街は薄暗さと静けさに包まれていた。アスファルトの路上には星屑のように散らばった冷たい雫が光っていた。冬枯れした木々からは霧のような白い息があふれ出す。遠くで聞こえる車輪音だけが、この空間を通過する唯一の存在感だった。</p>
+
+        <p>朝子は玄関先に立って深呼吸をする。鼻腔を通る冷たい空気には、何か懐かしい匂いがあった。それは人混みの中での賑やかな喧騒とは異なる静けさの中で育まれた、街自体が発する落ち着きと安堵感だった。</p>
+
+        <p>通りに目を向けると、休業中の店舗のシャッターは閉じられたままだった。小さな看板には「臨時休業」とか「営業再開未定」などという言葉が刻まれている。「この街は何処へ行ってしまったのか？」彼女はそんなことを考えながら歩き出す。</p>
+
+        <p>商店街をゆっくりと進む。ガラス張りの窓から覗く店内には、商品棚も陳列されていない。ただ壁際で静かに佇んでいる古いショーケースや壊れた看板が、その無力を露にするように見える。光る電球もなく、冷めたタイル床を踏むと音が響き渡り、それはまるで空っぽの箱の中から聞こえてくるような気がした。</p>
+
+        <p>通りには歩行者がほとんどいない。稀に目に入るのは、マスクをつけた人間の影だけだった。彼らは静かに自分の道を行く。表情も声もない存在として並ぶ。視線が合うことはほとんどなく、人々は無意味な会話を避けている。</p>
+
+        <p>朝子は思わず手を伸ばし、古い時計店の一際目立つ壊れたガラスの看板に触れようとした。「時間」というものがこの街では完全になくなったように見えた。彼女は何度も振り返りながら歩き続ける。</p>
+
+        <p>遠くで聞こえてくる音は、風鈴が揺れるような軽い金属音だった。近づいてみるとそれは通りの向こうにある小さな公園だった。緑色に塗られたゲートは開け放たれていたものの、誰も入らず閉ざされた空間そのもののように見えた。</p>
+
+        <p>朝子は公園内を一瞥しただけでも足早に戻り出す。「こんな所で何ができるのか」と自分自身に問いかけながら。しかし、遠くから聞こえる木々の間にある古い遊具が日光浴をするように横たわる姿は彼女の心を揺さぶった。</p>
+
+        <p>この公園にはかつて何度も友人たちと遊びに行っていた。「もし私たちが今ここに居たら？」その場面を想像しながら歩み続ける。ただ、虚しさではなく、何処か暖かい何かを感じていた。</p>
+        <p>公園の外へ出てすぐに目に入るのが、小さなパン屋だった。シャッターは開け放たれていたが、中の様子は何一つ見えない。「今日も休業」という文字だけが壁に浮かんでいた。</p>
+
+        <p>朝子は店先で立ち止まった。冷たい石畳の床から上がってきた湿った空気が頬を撫でる。</p>
+        <p>「ここには誰もいない」そう呟くと、彼女は何度目になるのか分からないほど深呼吸した。「でも、今なら私一人だけが存在しているんだ」と自分自身に言い聞かせた。</p>
+
+        <p>公園の裏手にある小さな道はいつもの通り静寂を保っていた。朝子はその光景を見つめながら歩み続け、自分がどこへ向かっているのか分からなくなっていた。</p>
+        <p>遠くで鳴る鳥たちの声がやけに耳に入り、それはまるで音楽のように響いていた。「自由と制限」という主題を再び考えてしまう。しかし、そのどちらも彼女には意味不明だった。</p>
+
+        <p>公園内の一角では風鈴から静かだが明瞭な金属的な音色があふれ出していた。</p>
+        <p>朝子はそれに耳を傾けつつ歩み続ける、「ここにあるのはただの空虚さだけ」そう自問しながら。しかし、それは同時に「全てが無になることへの懐疑」とも感じられた。</p>
+
+        <p>公園から少し離れた場所に小さなお祭り広場があった。そこで人々が踊る音や笑い声を想像するだけで心地よさを感じた。</p>
+        <p>彼女は静寂のなかで自身と向き合い、空虚な空間の中で自分だけの存在感を見つけることができていた。</p>
+
+        <p>公園から遠ざかるにつれて朝子は再び人気のある通りに出てきた。そこには小さなカフェが一つ開いていた。「営業中」という青い看板があり、窓ガラスを覗くと店内では一人の人間がコーヒーを作る姿があった。</p>
+        <p>彼女は何度も振り返りながら歩み続ける。</p>
+
+        <p>この街は静けさの中でもどこか暖かい何かを感じさせてくれていた。それは人々の存在感ではなく、それぞれの孤独の中で感じ取る温かな感情だった。「もし何処へ行くことも出来ないなら」と考えると、「ここにある全てが私の世界」のように思えた。</p>
+        <p>公園から遠ざかるにつれて彼女の心に浮かぶのは「制限と自由」についての問いかけばかりだった。</p>
+
+        <p>朝子はカフェの前で立ち止まり、店先を見つめている。そこには誰もいない。しかし、その空間自体が何か特別なもののように感じられた。</p>
+        <p>「この静けさの中で何処へ行こうか」と心に問いかける彼女は何度目になるのか分からないほど深呼吸をした。</p>
+
+        <p>公園から離れた場所で聞こえる声や音は遠い響きを帯びていた。まるで別の世界からのメッセージのように。</p>
+        <p>朝子の視線が街角を見渡すと、そこには休業中の店舗や閉ざされた空間だけがあった。「ここにある全てが私の世界」と彼女は何度も繰り返した。</p>
+
+        <p>公園から遠ざかるにつれて彼女の心に浮かぶのは「制限と自由」についての問いかけばかりだった。</p>
+        <p>カフェの前で立ち止まった朝子は、この街を再発見するための一歩目として深呼吸を続けた。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-6">
+      <div class="chapter-header">
+        <span class="chapter-number">第6章</span>
+        <h2 class="chapter-title">思い出の欠片</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第6章　思い出の欠片</p>
+
+        <p>薄曇りの中、陽が傾き始めた部屋には静けさだけが広がっていた。古い木製アルバムを開いた瞬間、埃の匂いと微かな光沢を感じる。ページをめくる音は時間が止まったかのようにゆっくりとした速度で進む。</p>
+
+        <p>「翔太郎さん、この写真どれだったっけ？」</p>
+        <p>朝子は指先に載った白紙を眺めて言った。</p>
+        <p>「そうだな、これが最初の旅行記念だろう」</p>
+        <p>彼女が示したページには、空と海しか映っていない風景画があった。その青色が部屋全体を染める。</p>
+
+        <p>雨粒が窓ガラス面で弾ける音が耳に届く。二人はアルバムの中で共通の思い出を探し求めていた。</p>
+        <p>「一緒に見た雲は何処へ行ったんだろう」</p>
+        <p>翔太郎の声には寂しさが混ざっていた。</p>
+        <p>朝子もまた、その問いに対して答えを出すことができなかった。</p>
+
+        <p>ページをめくると、次々に現れるのは公園での笑顔。人々は散り散りになり、青い芝生は誰にも触れないまま静かだった。「この頃の私たち何を考えていたんだろう」</p>
+        <p>翔太郎が呟いた。</p>
+        <p>「それとも今も同じ？」　朝子は首を傾げた。</p>
+
+        <p>アルバムの中で時間を遡ることに疲れた二人は何処へと目線を向ける。雨粒が窓ガラスで滑る様、遠くから聞こえる車の音だけが彼らの存在を感じさせた。</p>
+        <p>「翔太郎さん、私達はいつ頃笑わなくなったんだろう？」</p>
+        <p>静寂の中朝子が尋ねると、彼は僅かに目を伏せる。それ以上何も言わない。</p>
+
+        <p>再びページを開くと、そこには二人だけで過ごした日記帳があった。「これを見ると懐かしい気持ちになる」翔太郎の声が小さかった。</p>
+        <p>「私たちはどこへ向かっているんだろう？」朝子は自問するように言った。</p>
+        <p>雨粒が窓ガラスを打つ音だけが静かな部屋に響き、二人の思考を遮断しない。</p>
+
+        <p>アルバムの中から探している過去と現在。その両方を見失う感覚。「こんな風景もう二度と見られないんだろう」翔太郎は呟いた。</p>
+        <p>「でも、ここにある全てが私の世界だとも思うんだ」</p>
+
+        <p>雨粒に染まった光が部屋を仄暗く照らす中、二人の視線が互いを探した。彼らの中で再び思い出の一ページが始まる予感があった。</p>
+
+        <p>雲間から漏れる陽射しは、静かな室内で一筋だけ存在する。</p>
+        <p>その光がアルバムを閉じようとしている手に当たる時、「これから何を見つけるんだろう」と彼女は思っていた。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-7">
+      <div class="chapter-header">
+        <span class="chapter-number">第7章</span>
+        <h2 class="chapter-title">制限と自由</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第7章　制限と自由</p>
+
+        <p>雨粒が地面に落ちる音、遠い街のほうから聞こえるクラクション。朝子の部屋からは、窓ガラス一面に広がる灰色な空気が見えているだけだ。彼女は静かにコーヒーを啜りながら、外を見つめ続けた。</p>
+
+        <p>「翔太郎さん、今日はどこで過ごすんですか？」</p>
+
+        <p>テレビから流れるニュース音声の合間に、朝子はスマートフォン越しに対面アプリを使って翔太郎と話していた。</p>
+        <p>「昨日と同じ公園ですね。」</p>
+        <p>彼女が返事をすると画面には薄笑いを浮かべる翔太郎の顔があった。</p>
+
+        <p>今日も外出制限下での週末が始まった。人々にとって、「外に出ること」とは異なる意味を持っていた。それが自由なのか、抑圧なのか。</p>
+        <p>朝子と翔太郎はアプリ越しに会話を続けるが、言葉よりも静寂や視線で互いの存在を感じた。</p>
+
+        <p>公園はいつものように人気薄だった。遠くからは木々の中を通り抜ける風の音しか聞こえない。地面には枯れ葉が積もり始めている。</p>
+        <p>「この街の景色を見てると、何か不自然な感じがするね」</p>
+
+        <p>翔太郎の視線で朝子は公園を見渡した。確かに緑と青だけではなく灰色の建物群も見えた。</p>
+
+        <p>「今の人間関係って、本当に関心を持てるものなんだろうか？」</p>
+        <p>彼女たちを取り巻く静寂を破るその言葉が、二人に意外な思い込みがあることを告げた。</p>
+        <p>「オンライン上の交流ばかりだと、それがただのフィクションでしかない気がするよね。」</p>
+
+        <p>彼はスマホから顔を上げて視線だけを向け、空を見つめていた。</p>
+
+        <p>「でも僕らは何度も会ったんだよ？実際にね」</p>
+        <p>翔太郎が静かに口を開く。</p>
+        <p>二人とも言葉を探していた。この瞬間の沈黙があまりにも長かった。</p>
+
+        <p>公園では秋を感じさせる風が吹き抜けて、木々から落ちる紅葉を見ていると不思議な感覚になる。雨粒はまだ地面を濡らし続けている。朝子たちは静かな光景に包まれながら、それぞれの思いを探った。</p>
+        <p>「それでも僕たちには過去があるんです」</p>
+        <p>彼女がゆっくりと言葉を紡いだ。</p>
+
+        <p>二人とも立ち上がり、歩み始める。その足音は枯れ草と石畳の上から聞こえるだけだった。</p>
+
+        <p>朝子たちは公園の中を進んでいく中で徐々に思い出せない日々が増えていることを感じ始めた。</p>
+        <p>「翔太郎さん、昔一緒に見た夏空が思い浮かぶ？」</p>
+        <p>彼女の視線は遠くへ行った。過去への想い出を彩る青と黄の絵画を見つめている。</p>
+
+        <p>公園の中で二人だけだったからこそ見えたものがいくつかあった。風や木々の音色もまた、その時独特の温もりを持っていた。</p>
+        <p>「確かに思い出があるけど、それが実際に存在していたとは思えないんだ」</p>
+        <p>翔太郎が遠慮がちに口を開いた。彼は過去への懐古的思考と現実との間で揺れる。</p>
+
+        <p>二人とも言葉を続けた。「でも僕たちにはここにあるものもある」と朝子。</p>
+        <p>「そうだね、確かにそう思う」</p>
+
+        <p>空色の光が公園の中に差し込んできたとき、彼らは互いを見つめ合った。沈黙の中でお互いの表情から理解を得ていた。</p>
+
+        <p>二人とも視線を上げて灰色の雲間から見える小さな一筋の陽射しを探していた。</p>
+        <p>「僕たちはまだここにあるんだよ」</p>
+        <p>朝子が静かに言葉を発した後、公園は再び沈黙に戻った。</p>
+      </div>
+    </section>
+    <section class="chapter" id="chapter-8">
+      <div class="chapter-header">
+        <span class="chapter-number">第8章</span>
+        <h2 class="chapter-title">外出禁止の真実</h2>
+      </div>
+      
+      <div class="chapter-body">
+        <p>第8章　外出禁止の真実</p>
+
+        <p>雨粒が公園の地面に音もなく落ちる。空から降り注ぐ滴が、アスファルトにはじけるかのように見えた。遠くで雷鳴が聞こえる。静寂と爆発的な瞬間が交互に訪れる。</p>
+
+        <p>朝子は黒い傘を手にして立ち去ろうとする。翔太郎の横顔を見つめ、口元に優しい微笑みを浮かべた。「またね」という言葉だけを残して歩き出す。</p>
+        <p>「待って」</p>
+        <p>彼女が振り返る。</p>
+
+        <p>雨粒は公園内の木々と草花から水滴を取り出し、新しい輝きを与える。緑の色合いの中でも微かな赤みがかすめていた。それは日が落ちる前の最後の光だった。</p>
+
+        <p>翔太郎は足元を見つめながら呟く。「もし外出できなかったら週末なんて存在しないのかな」</p>
+        <p>彼女の視線を受けて、さらに続ける。</p>
+        <p>「思い出がないから」</p>
+
+        <p>雨音と葉っぱからの滴り落ちは公園全体に静けさを保ち続けている。湿度が高い空気が頬を撫でる。</p>
+
+        <p>朝子は翔太郎の言葉を受け止め、「でも本当のことは違うわ」</p>
+        <p>彼女が歩み寄ると、彼もまた一歩踏み出す。</p>
+        <p>「週末という名前の時間はあるのよ」</p>
+
+        <p>二人は互いを見つめ合い、それぞれ胸に秘めた思いを静かに語り始める。雨音と遠吠えだけが彼らとの間で響き続けた。</p>
+
+        <p>彼女たちの会話は空気中の水滴と共に回廊を伝わる。「思い出があるから週末は存在する」</p>
+        <p>「それは私たち二人もそうだよね」</p>
+
+        <p>翔太郎は静かに頷く。雨粒が地面と木々から跳ね返り、薄暗い光の中で小さな光の輪郭を作っている。</p>
+
+        <p>朝子は再び彼女たちを見た。「私たちは週末を祝ってるんだ」</p>
+        <p>「それが私たちの思い出だから」</p>
+
+        <p>二人ともその言葉に静かに頷く。雨粒が地面や木々から反射して作り出す薄明かりの中で、それぞれの影が重なり合う。</p>
+
+        <p>空はまだ暗いままだった。街灯からの光だけが公園を優しく照らしている。</p>
+        <p>朝子と翔太郎は再び互いを見つめ合い、「またね」という言葉だけで別れようとする。</p>
+
+        <p>しかし二人ともその言葉に少しの間を置いてから、再び顔を見合わせる。「本当に」</p>
+
+        <p>彼女たちの視線が交差する。雨粒の光が最後の一瞬で彼らの思い出を作り上げる。</p>
+        <p>それらは決して曖昧な存在ではなく、「本当」であることが感じられた。</p>
+
+        <p>二人とも静かに微笑むと、再び互いを見つめ合う。「またね」</p>
+
+        <p>公園から聞こえる遠吠え。そして雨粒が地面にはじける音だけが残される。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>もし外出が出来なかったら週末はなかった</p>
+    <p>Generated locally with Ollama + Stable Diffusion</p>
+  </footer>
+
+
+  <button class="tts-fab" id="ttsFab" onclick="ttsToggle()" title="Read aloud">
+    <span id="ttsFabIcon">&#x1f50a;</span>
+  </button>
+  <div class="tts-bar" id="ttsBar">
+    <button onclick="ttsPause()" id="ttsPauseBtn">&#x23f8;</button>
+    <button onclick="ttsStop()">&#x23f9;</button>
+    <button onclick="ttsPrev()">&#x23ee;</button>
+    <button onclick="ttsNext()">&#x23ed;</button>
+    <span class="tts-info" id="ttsInfo">Ready</span>
+    <span class="tts-speed">
+      <input type="range" id="ttsSpeed" min="0.5" max="2.0" step="0.1"
+             value="1.0" onchange="ttsSetSpeed(this.value)" />
+      <span id="ttsSpeedVal">1.0x</span>
+    </span>
+  </div>
+
+  <button class="mode-toggle" onclick="toggleMode()">🌗 表示切替</button>
+
+  <script>
+    // Reading mode
+    function toggleMode() {
+      document.body.classList.toggle('light');
+      localStorage.setItem('mode', document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+    if (localStorage.getItem('mode') === 'light') document.body.classList.add('light');
+
+    // Scroll progress
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      document.getElementById('progress').style.width = pct + '%';
+    });
+
+    // === TTS (Web Speech API) ===
+    const synth = window.speechSynthesis;
+    let ttsChs = [], ttsI = 0, ttsRate = 1.0, ttsOn = false, ttsPd = false;
+
+    document.querySelectorAll('.chapter').forEach((sec, i) => {
+      const b = sec.querySelector('.chapter-body');
+      const t = sec.querySelector('.chapter-title');
+      if (b) ttsChs.push({
+        title: t ? t.textContent : ('Ch.' + (i+1)),
+        text: b.textContent.trim(), el: sec
+      });
+    });
+
+    function ttsToggle() {
+      if (!synth) { alert('Speech not supported'); return; }
+      if (ttsOn) { ttsStop(); return; }
+      const sy = window.scrollY + window.innerHeight / 3;
+      let cl = 0;
+      ttsChs.forEach((c, i) => { if (c.el.offsetTop <= sy) cl = i; });
+      ttsI = cl; ttsOn = true; ttsPd = false;
+      document.getElementById('ttsFab').classList.add('speaking');
+      document.getElementById('ttsFabIcon').innerHTML = '&#x23f9;';
+      document.getElementById('ttsBar').classList.add('active');
+      _ttsRead();
+    }
+
+    function _ttsRead() {
+      if (ttsI >= ttsChs.length) { ttsStop(); return; }
+      synth.cancel();
+      const ch = ttsChs[ttsI];
+      document.getElementById('ttsInfo').textContent = ch.title;
+      ch.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Split by Japanese sentence endings for reliable playback
+      const sents = ch.text.match(/[^。！？
+]+[。！？]?/g) || [ch.text];
+      let si = 0;
+
+      function next() {
+        if (!ttsOn) return;
+        if (si >= sents.length) {
+          ttsI++;
+          if (ttsI < ttsChs.length) setTimeout(_ttsRead, 800);
+          else ttsStop();
+          return;
+        }
+        const u = new SpeechSynthesisUtterance(sents[si].trim());
+        u.lang = 'ja-JP'; u.rate = ttsRate;
+        const vs = synth.getVoices();
+        const jv = vs.find(v => v.lang && v.lang.startsWith('ja'));
+        if (jv) u.voice = jv;
+        u.onend = () => { si++; next(); };
+        u.onerror = () => { si++; next(); };
+        synth.speak(u);
+      }
+      next();
+    }
+
+    function ttsPause() {
+      if (!ttsOn) return;
+      if (ttsPd) {
+        synth.resume(); ttsPd = false;
+        document.getElementById('ttsPauseBtn').innerHTML = '&#x23f8;';
+      } else {
+        synth.pause(); ttsPd = true;
+        document.getElementById('ttsPauseBtn').innerHTML = '&#x25b6;';
+      }
+    }
+
+    function ttsStop() {
+      synth.cancel(); ttsOn = false; ttsPd = false;
+      document.getElementById('ttsFab').classList.remove('speaking');
+      document.getElementById('ttsFabIcon').innerHTML = '&#x1f50a;';
+      document.getElementById('ttsBar').classList.remove('active');
+      document.getElementById('ttsInfo').textContent = 'Ready';
+      document.getElementById('ttsPauseBtn').innerHTML = '&#x23f8;';
+    }
+
+    function ttsNext() { if (ttsOn && ttsI < ttsChs.length - 1) { ttsI++; _ttsRead(); } }
+    function ttsPrev() { if (ttsOn && ttsI > 0) { ttsI--; _ttsRead(); } }
+    function ttsSetSpeed(v) {
+      ttsRate = parseFloat(v);
+      document.getElementById('ttsSpeedVal').textContent = v + 'x';
+    }
+    if (synth) synth.onvoiceschanged = () => synth.getVoices();
+
+    /* ─── Carousel ─── */
+    (function() {
+      const track = document.getElementById('carouselTrack');
+      if (!track) return;
+      const dots = track.parentElement.querySelectorAll('.carousel-dot');
+      const slides = track.querySelectorAll('.carousel-slide');
+      if (slides.length < 1) return;
+      function updateDots() {
+        const sw = slides[0].offsetWidth + 14;
+        const idx = Math.round(track.scrollLeft / sw);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+      track.addEventListener('scroll', updateDots, { passive: true });
+      dots.forEach(d => d.addEventListener('click', () => {
+        const sw = slides[0].offsetWidth + 14;
+        track.scrollTo({ left: parseInt(d.dataset.idx) * sw, behavior: 'smooth' });
+      }));
+      let paused = false, timer = setInterval(() => {
+        if (paused) return;
+        const sw = slides[0].offsetWidth + 14;
+        const mx = track.scrollWidth - track.clientWidth;
+        const nx = track.scrollLeft + sw;
+        track.scrollTo({ left: nx > mx ? 0 : nx, behavior: 'smooth' });
+      }, 4000);
+      track.addEventListener('touchstart', () => { paused = true; clearInterval(timer); }, { passive: true });
+      track.addEventListener('touchend', () => {
+        paused = false;
+        timer = setInterval(() => {
+          if (paused) return;
+          const sw = slides[0].offsetWidth + 14;
+          const mx = track.scrollWidth - track.clientWidth;
+          const nx = track.scrollLeft + sw;
+          track.scrollTo({ left: nx > mx ? 0 : nx, behavior: 'smooth' });
+        }, 4000);
+      }, { passive: true });
+    })();
+
+  </script>
+</body>
+</html>
